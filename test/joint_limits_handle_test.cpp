@@ -7,7 +7,7 @@
 
 #include "range_based_handle.h"
 
-template < class VelocitySaturationHandle > void test() {
+template < class VelocitySaturationHandle > void testVelocitySaturationSymmetry() {
   // General joint handle
   double pos(0.), vel(0.), eff(0.), cmd(0.);
   hardware_interface::JointStateHandle state_handle("joint", &pos, &vel, &eff);
@@ -56,13 +56,13 @@ template < class VelocitySaturationHandle > void test() {
 }
 
 // Test for current implementation
-TEST(VelocitySaturation, velocityJointSaturationHandle) {
-  test< joint_limits_interface::VelocityJointSaturationHandle >();
+TEST(VelocitySaturationSymetry, currentSaturation) {
+  testVelocitySaturationSymmetry< joint_limits_interface::VelocityJointSaturationHandle >();
 }
 
 // Test for proposed range-based implementation
-TEST(VelocitySaturation, rangeBasedSaturation) {
-  test< range_based::VelocityJointSaturationHandle >();
+TEST(VelocitySaturationSymetry, rangeBasedSaturation) {
+  testVelocitySaturationSymmetry< range_based::VelocityJointSaturationHandle >();
 }
 
 int main(int argc, char *argv[]) {
