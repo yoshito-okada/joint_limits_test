@@ -56,12 +56,12 @@ template < class VelocitySaturationHandle > void testVelocitySaturationSymmetry(
 }
 
 // Test for current implementation
-TEST(VelocitySaturationSymetry, currentSaturation) {
+TEST(VelocitySaturationSymmetry, currentSaturation) {
   testVelocitySaturationSymmetry< joint_limits_interface::VelocityJointSaturationHandle >();
 }
 
 // Test for proposed range-based implementation
-TEST(VelocitySaturationSymetry, rangeBasedSaturation) {
+TEST(VelocitySaturationSymmetry, rangeBasedSaturation) {
   testVelocitySaturationSymmetry< range_based::VelocityJointSaturationHandle >();
 }
 
