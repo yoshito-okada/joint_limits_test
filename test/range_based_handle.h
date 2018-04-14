@@ -29,7 +29,10 @@ public:
   double min() const { return min_; }
   double max() const { return max_; }
   // saturation
-  double clamp(const double val) { return boost::algorithm::clamp(val, min_, max_); }
+  double clamp(const double val) {
+    // would be useful in EffortJointSaturationHandle
+    return boost::algorithm::clamp(val, min_, max_);
+  }
   Range clamp(const Range &range) { return Range(clamp(range.min_), clamp(range.max_)); }
 
 private:
@@ -51,7 +54,7 @@ public:
       const double delta_vel(limits_.max_acceleration * period.toSec());
       vel_range = Range(vel - delta_vel, vel + delta_vel).clamp(vel_range);
     }
-    // Overwrite bound according to vel limits
+    // Overwrite bounds according to vel limits
     if (limits_.has_velocity_limits) {
       vel_range = Range(-limits_.max_velocity, limits_.max_velocity).clamp(vel_range);
     }
