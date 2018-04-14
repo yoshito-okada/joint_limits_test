@@ -38,6 +38,42 @@ private:
   double min_, max_;
 };
 
+class PositionJointSaturationHandle {
+public:
+  PositionJointSaturationHandle(const hardware_interface::JointHandle &jh,
+                                const joint_limits_interface::JointLimits &limits)
+      : jh_(jh), limits_(limits), prev_cmd_(std::numeric_limits< double >::quiet_NaN()) {}
+
+  void enforceLimits(const ros::Duration &period) {
+    if (std::isnan(prev_cmd_)) {
+      prev_cmd_ = jh_.getPosition();
+    }
+
+    // Default: unlimited position bounds
+    Range pos_range(Range::entire());
+    // Overwrite bounds according to vel limits
+    if (limits_.has_velocity_limits) {
+      const double delta_pos(limits_.max_velocity * period.toSec());
+      pos_range = Range(prev_cmd_ - delta_pos, prev_cmd_ + delta_pos).clamp(pos_range);
+    }
+    // Overwrite bounds according to pos limits
+    if (limits_.has_position_limits) {
+      pos_range = Range(limits_.min_position, limits_.max_position).clamp(pos_range);
+    }
+    // Clamp the command with bounds
+    const double cmd(pos_range.clamp(jh_.getCommand()));
+    jh_.setCommand(cmd);
+    prev_cmd_ = cmd;
+  }
+
+  void reset() { prev_cmd_ = std::numeric_limits< double >::quiet_NaN(); }
+
+private:
+  hardware_interface::JointHandle jh_;
+  joint_limits_interface::JointLimits limits_;
+  double prev_cmd_;
+};
+
 class VelocityJointSaturationHandle {
 public:
   VelocityJointSaturationHandle(const hardware_interface::JointHandle &jh,
