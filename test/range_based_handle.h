@@ -23,16 +23,15 @@ public:
   static Range entire() {
     return Range(-std::numeric_limits< double >::max(), std::numeric_limits< double >::max());
   }
-  static Range positive() { return Range(0., std::numeric_limits< double >::max()); }
+  static Range positive() { // would be useful in EffortJointSaturationHandle
+    return Range(0., std::numeric_limits< double >::max());
+  }
   static Range negative() { return Range(-std::numeric_limits< double >::max(), 0.); }
   // getters
   double min() const { return min_; }
   double max() const { return max_; }
   // saturation
-  double clamp(const double val) {
-    // would be useful in EffortJointSaturationHandle
-    return boost::algorithm::clamp(val, min_, max_);
-  }
+  double clamp(const double val) { return boost::algorithm::clamp(val, min_, max_); }
   Range clamp(const Range &range) { return Range(clamp(range.min_), clamp(range.max_)); }
 
 private:
